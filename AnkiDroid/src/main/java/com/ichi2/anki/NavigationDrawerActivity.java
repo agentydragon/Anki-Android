@@ -61,6 +61,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
     public static final int REQUEST_BROWSE_CARDS = 101;
     public static final int REQUEST_STATISTICS = 102;
     private static final String NIGHT_MODE_PREFERENCE = "invertedColors";
+    private static final Timber.Tree log = Timber.tag(NavigationDrawerActivity.class.getName());
 
     /**
      * runnable that will be executed after the drawer has been closed.
@@ -126,7 +127,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
      */
     protected void selectNavigationItem(int itemId) {
         if (mNavigationView == null) {
-            Timber.e("Could not select item in navigation drawer as NavigationView null");
+            log.e("Could not select item in navigation drawer as NavigationView null");
             return;
         }
         Menu menu = mNavigationView.getMenu();
@@ -139,7 +140,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
             if (item != null) {
                 item.setChecked(true);
             } else {
-                Timber.e("Could not find item %d", itemId);
+                log.e("Could not find item %d", itemId);
             }
         }
     }
@@ -174,7 +175,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
 
     private void applyNightMode(boolean setToNightMode) {
         final SharedPreferences preferences = getPreferences();
-        Timber.i("Night mode was %s", setToNightMode ? "enabled" : "disabled");
+        log.i("Night mode was %s", setToNightMode ? "enabled" : "disabled");
         preferences.edit().putBoolean(NIGHT_MODE_PREFERENCE, setToNightMode).apply();
         restartActivityInvalidateBackstack(NavigationDrawerActivity.this);
     }
@@ -249,7 +250,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
     @Override
     public void onBackPressed() {
         if (isDrawerOpen()) {
-            Timber.i("Back key pressed");
+            log.i("Back key pressed");
             mDrawerLayout.closeDrawers();
         } else {
             super.onBackPressed();
@@ -359,7 +360,7 @@ public abstract class NavigationDrawerActivity extends AnkiActivity implements N
      * Restart the activity and discard old backstack, creating it new from the hierarchy in the manifest
      */
     protected void restartActivityInvalidateBackstack(AnkiActivity activity) {
-        Timber.i("AnkiActivity -- restartActivityInvalidateBackstack()");
+        log.i("restartActivityInvalidateBackstack()");
         Intent intent = new Intent();
         intent.setClass(activity, activity.getClass());
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(activity);
